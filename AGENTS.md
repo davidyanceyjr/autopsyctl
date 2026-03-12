@@ -325,6 +325,9 @@ Prefer:
 
 Keep changes narrow and reviewable.
 
+Branches should follow the pattern:
+<type>/<issue-number>-<slug>
+
 Prefer:
 - one logical change per edit
 - matching doc updates when behavior changes
