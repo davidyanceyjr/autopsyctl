@@ -1,3 +1,4 @@
+
 # AGENTS.md
 
 ## Purpose
@@ -28,6 +29,96 @@ Primary use cases include:
 - forensic collection
 - reliability and SRE tooling
 - reviewable AI-assisted C code generation
+
+---
+
+## Engineering Workflow
+
+This repository follows a structured solo-engineering workflow intended to keep AI-assisted development reviewable and deterministic.
+
+Standard lifecycle:
+
+issue → specification → design → implementation → tests → debug → commit → review → merge → documentation
+
+Artifacts map to this lifecycle as follows:
+
+| Stage | Artifact |
+|------|---------|
+| issue | GitHub issue |
+| specification | `spec/<issue>.md` |
+| design | `docs/design/<issue>.md` |
+| implementation | `src/` |
+| verification | `tests/` |
+| documentation | `docs/` |
+
+Agents should not skip workflow stages without explicit justification.
+
+Examples:
+
+- do not implement complex behavior without a specification
+- do not merge behavior changes without tests
+- do not change CLI behavior without updating documentation
+
+Agents should begin new sessions by determining repository state using the `repo-state` skill.
+
+---
+
+## AI Skills System
+
+This repository uses a `.skills/` directory containing procedural instructions for AI-assisted development tasks.
+
+Skills define repeatable engineering operations such as:
+
+- repository state inspection
+- issue creation
+- specification drafting
+- design review
+- implementation planning
+- test generation
+- patch review
+- debugging triage
+- documentation synchronization
+
+Skills are grouped by category:
+
+.skills/
+  workflow/   lifecycle transitions
+  github/     issue and PR management
+  git/        local repository discipline
+  debug/      failure reproduction and debugging
+  quality/    architecture and interface review
+  release/    changelog and milestone preparation
+  testing/    test framework maintenance
+
+Agents should prefer invoking an appropriate skill instead of improvising new workflows.
+
+Skills represent engineering procedures, not merely suggestions.
+
+---
+
+## AI Response Contract
+
+When guiding development work, agents should structure responses using the following format when appropriate:
+
+Stage
+-----
+Current workflow stage.
+
+Skill
+-----
+Skill selected to guide the task.
+
+Action
+------
+Concrete next steps.
+
+Why
+---
+Reasoning behind the step.
+
+Next
+----
+What should happen after the step completes.
 
 ---
 
