@@ -290,10 +290,14 @@ A reviewer should understand the function by reading only the labels.
 # 9. Example Canonical Function
 
 ``` c
-int collect_proc_status(struct collect_ctx *ctx, pid_t pid, struct proc_status *out)
+enum collect_result collect_proc_status(
+    struct collect_ctx *ctx,
+    pid_t pid,
+    struct proc_status *out
+)
 {
-    int rc = -1;
-    int proc_fd = -1;
+    enum collect_result rc = COLLECT_INVALID;
+    int status_fd = -1;
 
 validate_input:
     if (!ctx || !out || pid <= 0)
@@ -302,27 +306,35 @@ validate_input:
 initialize_state:
     *out = (struct proc_status){0};
 
-acquire_resources:
-    proc_fd = open_pid_dir(pid);
-    if (proc_fd < 0)
+build_path:
+    if (build_proc_status_path(pid) != 0) {
+        rc = COLLECT_PARSE_ERROR;
         goto cleanup;
+    }
+
+acquire_resources:
+    status_fd = open_proc_status(pid);
+    if (status_fd < 0) {
+        rc = COLLECT_UNAVAILABLE;
+        goto cleanup;
+    }
 
 read_inputs:
-    rc = read_status_file(proc_fd, out);
-    if (rc != 0)
+    rc = read_status_file(status_fd, out);
+    if (rc != COLLECT_OK)
         goto cleanup;
 
 check_invariants:
     rc = validate_proc_status(out);
-    if (rc != 0)
+    if (rc != COLLECT_OK)
         goto cleanup;
 
 emit_results:
-    rc = 0;
+    rc = COLLECT_OK;
 
 cleanup:
-    if (proc_fd >= 0)
-        close(proc_fd);
+    if (status_fd >= 0)
+        close(status_fd);
 
     return rc;
 }

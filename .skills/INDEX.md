@@ -10,6 +10,7 @@
 - patch-review
 - docs-sync
 - session-handoff
+- list-skills
 
 ## GitHub
 - workflow

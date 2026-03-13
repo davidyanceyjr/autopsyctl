@@ -15,7 +15,7 @@ That matters even more in a world where AI-generated code can increase throughpu
 
 # Status
 
-This project is in active design and early implementation planning.
+This project is in active design and bootstrap implementation.
 
 Current design documents:
 
@@ -29,6 +29,12 @@ Initial implementation target:
 - read-only process snapshotting
 - deterministic JSON and text output
 - human-auditable control flow in C17
+
+Current bootstrap implementation:
+
+- a `collect_proc_status(...)` collector for `/proc/<pid>/status`
+- explicit collector result codes for invalid input, unavailable targets, and parse failures
+- offline `make test` coverage for collector semantics plus a smoke test
 
 ---
 
